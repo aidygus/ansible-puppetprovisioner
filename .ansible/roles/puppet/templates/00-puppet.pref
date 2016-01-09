@@ -1,0 +1,4 @@
+# /etc/apt/preferences.d/00-puppet.pref
+Package: puppet puppet-common puppetmaster-passenger
+Pin: version {{ puppet_version }}
+Pin-Priority: 501

@@ -1,0 +1,31 @@
+---
+# Clear out any old certificates first.
+- name: deleting old certificates
+  file: path="/var/lib/puppet/ssl" state=absent
+  when: puppet_type == "m"
+
+# Distribution dependant installs
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+- include: rhel.yml
+  when: ansible_os_family  == "RedHat" or ansible_os_family  == "Centos"
+
+# Common functions following related to donfiguration
+- name: Copying puppet.conf
+  template: src=puppet.conf dest=/etc/puppet/puppet.conf
+
+- name: Setting daemon to start
+  replace: dest=/etc/default/puppet regexp='^START=no' replace='START=yes'
+  when: puppet_type != "m"
+
+- name: creating main manifest
+  template: src=site.pp dest="/etc/puppet/manifests/site.pp"
+  when: puppet_type == "m"
+
+- name: Starting puppet on master
+  service: name=apache2 state=started
+  when: ansible_os_family == "Debian" and puppet_type == "m"
+
+- name: Starting puppet on agent
+  service: name=puppet state=started
+  when: ansible_os_family == "Debian" and puppet_type != "m"

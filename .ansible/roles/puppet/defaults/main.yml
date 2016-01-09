@@ -1,0 +1,10 @@
+---
+  master_host_name: master.vm
+  agent1_host_name: agent.1.vm
+  agent2_host_name: agent.2.vm
+  puppet_download_debian: http://apt.puppetlabs.com/puppetlabs-release-trusty.deb
+  puppet_download_rhel: http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+  puppet_name: puppetlabs-release-trusty
+  download_folder: /var/tmp
+  puppet_archive: "{{download_folder}}/{{puppet_name}}.deb"
+  puppet_version: "3.8*"

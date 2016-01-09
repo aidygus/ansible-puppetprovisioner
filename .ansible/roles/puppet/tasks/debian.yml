@@ -1,0 +1,22 @@
+---
+- name: Downloading .deb package
+  get_url: url={{ puppet_download_debian }} dest={{ puppet_archive }}
+
+- name: Unpackaging deb
+  apt: deb={{ puppet_archive }} update_cache=yes
+
+- name: Installing puppet on master
+  apt: name=puppetmaster-passenger state=latest update_cache=yes
+  ignore_errors: yes
+  when: puppet_type == "m"
+
+- name: Installing puppet on agent
+  apt: name=puppet state=latest update_cache=yes force=yes
+  when: puppet_type != "m"
+
+- name: Stopping service
+  service: name=apache2 state=stopped
+  when: puppet_type == "m"
+
+- name: Locking puppet version
+  template: src=00-puppet.pref dest=/etc/apt/preferences.d/00-puppet.pref

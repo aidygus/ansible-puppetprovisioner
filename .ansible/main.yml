@@ -1,0 +1,12 @@
+---
+- hosts: all
+  sudo: yes
+  user: vagrant
+
+  vars_prompt:
+  - name: "puppet_type"
+    prompt: "Is this the (m)aster or one of the agents? (m, 1 or 2)?"
+    default: "m"
+
+  roles:
+     - puppet
